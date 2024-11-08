@@ -14,15 +14,15 @@ from rest_framework import status
 class UserProfileView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-    def get(self, request:Request):
+    def get(self, request:Request,id=None):
         try:   
-
-            if request.path.endswith('/me'):
-                user_profile = UserProfile.objects.get(user=request.user)
+            if id:
+                user_profile = UserProfile.objects.get(id=id)
                 serializer = UserProfileSerializer(user_profile)
                 return Response({"data": serializer.data}, status=status.HTTP_200_OK)
             
-
+            
+            
             username=request.query_params.get('username',None)
             limit = request.query_params.get('limit', 5)  
             offset = request.query_params.get('offset', 0)
@@ -42,7 +42,13 @@ class UserProfileView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-    
+class MeView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self,request:Request):
+        user_profile = UserProfile.objects.get(user=request.user)
+        serializer = UserProfileSerializer(user_profile)
+        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
 class UserLoginView(APIView):
     permission_classes = []

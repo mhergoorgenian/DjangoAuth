@@ -14,27 +14,34 @@ from rest_framework import status
 class UserProfileView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-    def get(self, request,id=None):
-        try:
-            if request.user.is_superuser:  
-                if id is None:
-                    users = UserProfile.objects.all()
-                else:
-                    users = UserProfile.objects.filter(id=id)
-                serializer = UserProfileSerializer(users, many=True)
-                return Response({"data": serializer.data}, status=status.HTTP_200_OK)
-               
-            
+    def get(self, request:Request):
+        try:   
 
-            user = UserProfile.objects.get(user=request.user)
-            serializer = UserProfileSerializer(user)
+            if request.path.endswith('/me'):
+                user_profile = UserProfile.objects.get(user=request.user)
+                serializer = UserProfileSerializer(user_profile)
+                return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+            
+            
+            username=request.query_params.get('username',None)
+            limit = request.query_params.get('limit', 5)  
+            offset = request.query_params.get('offset', 0)
+            
+            if username:
+                users = UserProfile.objects.filter(user__username__startswith=username)[int(offset): int(limit)]
+            else:
+                users = UserProfile.objects.all()[offset:offset + limit]
+                
+            serializer = UserProfileSerializer(users, many=True)
+
             return Response({"data": serializer.data}, status=status.HTTP_200_OK)
-        
+            
         except Exception as e:
             return Response(
                 {"error": f"An unexpected error occurred: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
     
 
 class UserLoginView(APIView):

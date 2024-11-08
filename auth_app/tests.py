@@ -9,8 +9,16 @@ import json
 class AuthTest(APITestCase):
     def test_auth(self):
 
-        #register
+        #register1
         data = {"username": "test1", "password": "test1"}
+        url = reverse('register_user')
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        res_data = response.json()
+        self.assertIn('data', res_data)
+
+        #register2
+        data = {"username": "test2", "password": "test2"}
         url = reverse('register_user')
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -19,7 +27,7 @@ class AuthTest(APITestCase):
 
 
         #login
-        data = {"username": "test1", "password": "test1"}
+        data = {"username": "test2", "password": "test2"}
         url = reverse('login_user')
         response=self.client.post(url,data,fromat='json')
         res_data = response.json()
@@ -27,12 +35,14 @@ class AuthTest(APITestCase):
         token=res_data['token']
         print(token)
 
-
-        #checkUser
-        url = reverse('get_users')
-        response = self.client.get(url, HTTP_AUTHORIZATION='Token '+token)
-        print(response)
+        #search
+        search_username = 't'
+        offset = 0
+        limit = 10
+        url = reverse('get_users') + f"?username={search_username}&offset={offset}&limit={limit}"
+        print(url)
+        response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token)
         res_data = json.loads(response.content)
-        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         print(res_data)
-
+        

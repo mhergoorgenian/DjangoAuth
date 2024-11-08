@@ -14,12 +14,18 @@ from rest_framework import status
 class UserProfileView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-
     def get(self, request):
         try:
+            if request.user.is_staff:  
+                users = UserProfile.objects.all()
+                serializer = UserProfileSerializer(users, many=True)
+                return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+            
+
             user = UserProfile.objects.get(user=request.user)
             serializer = UserProfileSerializer(user)
             return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+        
         except Exception as e:
             return Response(
                 {"error": f"An unexpected error occurred: {str(e)}"},

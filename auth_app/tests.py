@@ -35,6 +35,15 @@ class AuthTest(APITestCase):
         token=res_data['token']
         print(token)
 
+
+        #me
+        url = reverse('get_mydata')
+        print(url)
+        response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token)
+        res_data = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print(res_data)
+        
         #search
         search_username = 't'
         offset = 0

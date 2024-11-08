@@ -42,7 +42,7 @@ class UsersView(APIView):
                 users = UserProfile.objects.filter(user__username__startswith=username)[int(offset): int(limit)]
             else:
                 total = UserProfile.objects.count()
-                users = UserProfile.objects.all()[offset : limit]
+                users = UserProfile.objects.all()[int(offset): int(limit)]
                 
             serializer = UserProfileSerializer(users, many=True)
 

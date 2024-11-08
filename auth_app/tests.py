@@ -40,10 +40,29 @@ class AuthTest(APITestCase):
         print(res_data)
         
         #search
-        search_username = 't'
+        #search_username = 't'
+        #offset = 0
+        #limit = 10
+        #url = reverse('get_users') + f"?username={search_username}&offset={offset}&limit={limit}"
+        #print(url)
+        #response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token)
+        #res_data = json.loads(response.content)
+        #self.assertEqual(response.status_code, status.HTTP_200_OK)
+        #print(res_data)
+
+        #getalluserswithoffsetandlimit
         offset = 0
-        limit = 10
-        url = reverse('get_users') + f"?username={search_username}&offset={offset}&limit={limit}"
+        limit = 5
+        url = reverse('get_users') + f"?offset={offset}&limit={limit}"
+        print(url)
+        response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token)
+        res_data = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print(res_data)
+
+
+        #getallusers
+        url = reverse('get_users')
         print(url)
         response = self.client.get(url, HTTP_AUTHORIZATION='Token ' + token)
         res_data = json.loads(response.content)

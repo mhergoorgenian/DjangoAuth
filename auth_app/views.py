@@ -34,7 +34,7 @@ class UserLoginView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         
-        # Print to test if request.data.get is working
+        
         print("Username:", username)
         print("Password:", password)
         
@@ -55,7 +55,7 @@ class UserRegisterView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         
-        # Print to test if request.data.get is working
+        
         print("Username:", username)
         print("Password:", password)
         try:
@@ -66,7 +66,7 @@ class UserRegisterView(APIView):
             user.set_password(password)
             user.save()
             
-            # Create a corresponding user profile
+            
             profile = UserProfile.objects.create(user=user)
             data = UserProfileSerializer(profile).data
             return Response({"data": data}, status=201)

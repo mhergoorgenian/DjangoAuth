@@ -38,11 +38,12 @@ class UsersView(APIView):
             offset = request.query_params.get('offset', 0)
             
             if username:
-                
+                total = UserProfile.objects.filter(user__username__startswith=username).count()
                 users = UserProfile.objects.filter(user__username__startswith=username)[int(offset): int(limit)]
             else:
+                total = UserProfile.objects.count()
                 users = UserProfile.objects.all()[offset : limit]
-            total=UserProfile.objects.count()
+                
             serializer = UserProfileSerializer(users, many=True)
 
             return Response(

@@ -9,21 +9,16 @@ import json
 class AuthTest(APITestCase):
     def test_auth(self):
 
+        for i in range(0,10):
         #register1
-        data = {"username": "test1", "password": "test1"}
-        url = reverse('register_user')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        res_data = response.json()
-        self.assertIn('data', res_data)
+            data = {"username": f"test{i}", "password": f"test{i}"}
+            url = reverse('register_user')
+            response = self.client.post(url, data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            res_data = response.json()
+            self.assertIn('data', res_data)
 
-        #register2
-        data = {"username": "test2", "password": "test2"}
-        url = reverse('register_user')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        res_data = response.json()
-        self.assertIn('data', res_data)
+        
 
 
         #login

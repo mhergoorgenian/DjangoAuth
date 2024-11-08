@@ -11,7 +11,8 @@ from django.http import JsonResponse
 from rest_framework.request import Request
 from rest_framework import status
 
-class UserProfileView(APIView):
+
+class UserView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request:Request,id=None):
@@ -21,8 +22,17 @@ class UserProfileView(APIView):
                 serializer = UserProfileSerializer(user_profile)
                 return Response({"data": serializer.data}, status=status.HTTP_200_OK)
             
-            
-            
+        except Exception as e:
+            return Response(
+                {"error": f"An unexpected error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class UsersView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request:Request):
+        try:   
             username=request.query_params.get('username',None)
             limit = request.query_params.get('limit', 5)  
             offset = request.query_params.get('offset', 0)
@@ -34,8 +44,10 @@ class UserProfileView(APIView):
                 
             serializer = UserProfileSerializer(users, many=True)
 
-            return Response({"data": serializer.data}, status=status.HTTP_200_OK)
-            
+            return Response(
+                {"data": serializer.data, "total-count": len(serializer.data)},
+                status=status.HTTP_200_OK
+            )
         except Exception as e:
             return Response(
                 {"error": f"An unexpected error occurred: {str(e)}"},
@@ -50,7 +62,7 @@ class MeView(APIView):
         serializer = UserProfileSerializer(user_profile)
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
-class UserLoginView(APIView):
+class LoginView(APIView):
     permission_classes = []
 
     def post(self, request: Request):
@@ -71,7 +83,9 @@ class UserLoginView(APIView):
             return Response({ "error" : {"message"  : "Invalid username or password"} },status=400)
         
 
-class UserRegisterView(APIView):
+        
+
+class RegisterView(APIView):
     permission_classes = []
 
     def post(self, request: Request):

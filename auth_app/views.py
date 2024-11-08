@@ -22,7 +22,7 @@ class UserProfileView(APIView):
                 serializer = UserProfileSerializer(user_profile)
                 return Response({"data": serializer.data}, status=status.HTTP_200_OK)
             
-            
+
             username=request.query_params.get('username',None)
             limit = request.query_params.get('limit', 5)  
             offset = request.query_params.get('offset', 0)
@@ -30,7 +30,7 @@ class UserProfileView(APIView):
             if username:
                 users = UserProfile.objects.filter(user__username__startswith=username)[int(offset): int(limit)]
             else:
-                users = UserProfile.objects.all()[offset:offset + limit]
+                users = UserProfile.objects.all()[offset : limit]
                 
             serializer = UserProfileSerializer(users, many=True)
 

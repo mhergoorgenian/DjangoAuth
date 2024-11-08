@@ -38,6 +38,7 @@ class UsersView(APIView):
             offset = request.query_params.get('offset', 0)
             
             if username:
+                total=UserProfile.objects.count()
                 users = UserProfile.objects.filter(user__username__startswith=username)[int(offset): int(limit)]
             else:
                 users = UserProfile.objects.all()[offset : limit]
@@ -45,7 +46,7 @@ class UsersView(APIView):
             serializer = UserProfileSerializer(users, many=True)
 
             return Response(
-                {"data": serializer.data, "total-count": len(serializer.data)},
+                {"data": serializer.data, "total-count": total},
                 status=status.HTTP_200_OK
             )
         except Exception as e:

@@ -8,6 +8,6 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-##Run Tests
+## Run Tests
 ```bash
 python managge.py test

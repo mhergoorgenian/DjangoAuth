@@ -1,8 +1,16 @@
-Django-Simple-REST-auth
-Usage
-pip install -r requirements.txt
+# Django-Auth
 
-python manage.py migrate
+A simple Django REST authentication setup.
+
+## Usage
+ ```bash
+    pip install -r requirements.txt
+    
+    python manage.py migrate
+```
 
 run tests
-python managge.py test
+
+
+   ```bash
+   python managge.py test
